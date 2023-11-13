@@ -8,4 +8,5 @@ export const pageContent = style({
 
 export const displayNumberBox = style({
   fontSize: "30px",
+  height: "40px",
 });

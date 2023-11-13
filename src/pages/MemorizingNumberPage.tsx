@@ -7,7 +7,7 @@ import { selectGameConfig } from "@/features/memoNumbers/selectGameConfig";
 
 const MemorizingNumberPage = () => {
   const [gameConfig, setGameConfig] = useState<GameConfig>({
-    digits: 4,
+    digits: 8,
     displaySeconds: 2,
     playCount: 0,
   });
@@ -36,10 +36,15 @@ const MemorizingNumberPage = () => {
   return (
     <CommonContainer>
       <main className={pageContent}>
-        <h1>Memorizing Number</h1>
+        <h1>数字 を 暗記 せよ</h1>
 
         {!displayNumber && (
           <button
+            style={{
+              width: "200px",
+              height: "100px",
+              fontSize: "30px",
+            }}
             onClick={async () => {
               gamePlay();
             }}
@@ -47,9 +52,21 @@ const MemorizingNumberPage = () => {
             Game Start
           </button>
         )}
+        {/* TODO: コンポーネント分離 */}
         {gameStarted && (
           <>
-            <div style={{ height: "40px", margin: "10px 0px" }}>
+            <div
+              style={{
+                height: "80px",
+                width: "400px",
+                margin: "10px 0px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              <div className={displayNumberBox}>説明欄</div>
               <div className={displayNumberBox}>
                 {showNumber ? displayNumber : inputNumber}
               </div>
