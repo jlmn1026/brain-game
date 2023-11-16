@@ -12,33 +12,49 @@ const MemorizingNumberPage = () => {
     playCount: 0,
   });
   const [inputNumber, setInputNumber] = useState<string>("");
+  const [explanation, setExplanation] = useState<string>("");
 
   const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [showNumber, setShowNumber] = useState<boolean>(false);
 
   const [displayNumber, setDisplayNumber] = useState<string>("");
 
+  const displayExplanation = useCallback((text: string) => {
+    setExplanation(text);
+    // setTimeout(() => {
+    //   setExplanation("");
+    // }, 750);
+  }, []);
+
   const gamePlay = useCallback(() => {
     setGameConfig(selectGameConfig(gameConfig));
     setInputNumber("");
-    setDisplayNumber(
-      Array.from({ length: gameConfig.digits })
-        .map(() => String(Math.floor(Math.random() * 10)))
-        .join("")
-    );
-    setTimeout(() => {
-      setShowNumber(false);
-    }, gameConfig.displaySeconds * 1000);
+    displayExplanation("Ready...");
     setGameStarted(true);
-    setShowNumber(true);
-  }, [gameConfig]);
+
+    setTimeout(() => {
+      displayExplanation("Go!");
+
+      setDisplayNumber(
+        Array.from({ length: gameConfig.digits })
+          .map(() => String(Math.floor(Math.random() * 10)))
+          .join("")
+      );
+      setTimeout(() => {
+        setShowNumber(false);
+        displayExplanation("");
+      }, gameConfig.displaySeconds * 1000);
+
+      setShowNumber(true);
+    }, 1000);
+  }, [displayExplanation, gameConfig]);
 
   return (
     <CommonContainer>
       <main className={pageContent}>
-        <h1>数字 を 暗記 せよ</h1>
+        <h1>数字 を 暗記</h1>
 
-        {!displayNumber && (
+        {!gameStarted && (
           <button
             style={{
               width: "200px",
@@ -66,7 +82,7 @@ const MemorizingNumberPage = () => {
                 flexDirection: "column",
               }}
             >
-              <div className={displayNumberBox}>説明欄</div>
+              <div className={displayNumberBox}>{explanation}</div>
               <div className={displayNumberBox}>
                 {showNumber ? displayNumber : inputNumber}
               </div>
@@ -104,12 +120,12 @@ const MemorizingNumberPage = () => {
               <button
                 onClick={() => {
                   if (inputNumber === displayNumber) {
-                    alert("Correct!");
+                    displayExplanation("Correct!");
                     setTimeout(() => {
                       gamePlay();
                     }, 1500);
                   } else {
-                    alert("Wrong!");
+                    displayExplanation("Wrong!");
                   }
                 }}
                 style={{ width: "200px", fontSize: "30px" }}
